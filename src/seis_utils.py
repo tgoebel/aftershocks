@@ -63,7 +63,7 @@ def dateTime2decYr( datetime_in, **kwargs ):
         o_dt = datetime.datetime( int( datetime_in[0] ), int( datetime_in[1] ), int( datetime_in[2] ), int( datetime_in[3] ), int( datetime_in[4] ), int( round( datetime_in[5])))
     except:
         error_msg = "datetime array not valid - %s; check if date and time is correct, e.g. no SC > 60.." % datetime_in
-        raise ValueError, error_msg
+        raise( ValueError( error_msg))
     time_sc = o_dt.hour*3600 + o_dt.minute*60 + o_dt.second    
     # get no. of day within current year between 0 to 364 and ad time in seconds
     dayOfYear_seconds = ( o_dt.timetuple().tm_yday - 1 ) * 86400.0 + time_sc
