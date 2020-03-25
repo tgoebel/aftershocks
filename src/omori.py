@@ -13,8 +13,7 @@ import scipy.optimize
 
 #====================================1===========================================
 #                   methods to fit aftershock decay
-#================================================================================    
-
+#================================================================================
 def fit_omoriMLE( a_tAS, **kwargs):
     """
     determine omori parameters from constrained optimization of likelihood fct. (from Ogata 1999).
@@ -61,17 +60,17 @@ def fit_omoriMLE( a_tAS, **kwargs):
         aBounds = kwargs['bounds']
         if len( aBounds) != 3 or len( aBounds.T) != 2:
             error_str = 'bounds input in kwargs has wrong dimension should be 3x2', aBounds
-            raise ValueError, error_str
+            raise( ValueError( error_str))
     if 'par0' in kwargs.keys() and kwargs['par0'] is not None:
         aPar0 = kwargs['par0']
         if len( aPar0) != 3:
-            error_str = 'par0 input in kwargs has wrong dimension should be 3x1', par0
-            raise ValueError, error_str
+            error_str = 'par0 input in kwargs has wrong dimension should be 3x1', aPar0
+            raise( ValueError( error_str))
     if 'disp' in kwargs.keys() and kwargs['disp'] is not None:
         disp = kwargs['disp']
     if 'method' in kwargs.keys() and kwargs['method'] is not None:
         method = kwargs['method']
-        print 'method', method
+        print( 'method', method)
     #---------------------maximize likelihood fct.--------------------------
     objFunc = lambda X: ogata_logL( a_tAS, X )
     # maximize av-log-likelihood
@@ -83,7 +82,7 @@ def fit_omoriMLE( a_tAS, **kwargs):
                                        tol = 1e-4, method=method,options={'disp': disp, 'maxiter':500})
     if dPar_fit['success'] != True:
         error_str = 'ML solution did not converge, ', dPar_fit
-        raise ValueError, error_str
+        raise( ValueError( error_str))
     dOm         = { 'p' : dPar_fit['x'][2], 'K' : dPar_fit['x'][1], 'c' : dPar_fit['x'][0]}
     dOm['logL'] = ogata_logL( a_tAS,  dPar_fit['x'])
     return dOm
@@ -172,7 +171,7 @@ def syn_tAS( c, p, tmin,tmax, N):
     #          case1:  p != 1
     #===========================================================================    
     #if p != 1.0: #abs(p - 1) < 1e-6:
-    p += 1e-5 # this will make it unlikely for p to be exactly 1
+    p += 1e-4 # this will make it unlikely for p to be exactly 1
     a1 = (tmax + c)**(1-p)
     a2 = (tmin + c)**(1-p)
     a3 = vRand*a1 + (1-vRand)*a2#     
