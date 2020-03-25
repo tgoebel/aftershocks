@@ -12,18 +12,16 @@ import numpy as np
 import scipy.stats
 #------------my modules-----------------------
 import src.seis_utils as seis_utils
-import omori
+import src.omori as omori
 np.random.seed(123456)
 #--------------------------0---------------------------------------------
 #                     params, dirs, files
 #------------------------------------------------------------------------
-file_out = 'data/syn_aftershock_Omori.png'
 plot_file = 'plots/syn_aftershock.png'
 dPar     =  {#synthetic data parameters
-            'N'  : 1e2, 'c_syn' : 0.1, 'p_syn' : 1.0,
-            'addNoise' : False, 'sigma' : .5,
-            # rate estimates
-            'k'      : 5, 
+            'N'  : int(100), 'c_syn' : 0.1, 'p_syn' : 1.0,
+            'addNoise' : True, 'sigma' : .5,
+            'k'      : 5, # compute aftershock rates using moving sample window, k
              #MLE
              #parameter bounds:            c        K        p
             'a_limit'     : np.array( [[.02, 2],[1, 300],[.2,2.5]]),
@@ -37,6 +35,7 @@ dPar     =  {#synthetic data parameters
 a_tAS = omori.syn_tAS( dPar['c_syn'], dPar['p_syn'], dPar['tmin'], dPar['tmax'], dPar['N'])
 if dPar['addNoise'] == True:
     a_tAS += np.random.randn( dPar['N'])*dPar['sigma']
+a_tAS.sort()
 dPar['K_syn'] = omori.K_from_N_and_dt(dPar['c_syn'], dPar['p_syn'], (a_tAS.max()-a_tAS.min()), dPar['N'])
 #==================================3================================================
 #                         power-law fitting (AS decay rate)
@@ -69,7 +68,7 @@ ax.legend( loc = 'upper right')
 ax.set_xlabel( 'Time [day]')
 ax.set_ylabel( 'events/day')
 ax.set_xlim( dPar['tmin'], dPar['tmax'])
-plt.savefig( plot_file)
+#plt.savefig( plot_file)
 plt.show()
 
 

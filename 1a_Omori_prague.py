@@ -12,14 +12,14 @@ import numpy as np
 import scipy.stats
 #------------my modules-----------------------
 import src.seis_utils as seis_utils
-import omori
+import src.omori as omori
 #--------------------------0---------------------------------------------
 #                     params, dirs, files
 #------------------------------------------------------------------------
 dir_file = 'data/prague_aftershock_clean.txt'
 plot_file = 'plots/prague_aftershock.png'
-dPar     =  { 'k'    : 5, # rate estiamtes
-             
+dPar     =  { 'k'    : 5, # used for seis. rate estimate in moving sample window
+                          # larger k result in smoother seismicity rates
              #MLE
              #parameter bounds:            c        K        p
             'a_limit'     : np.array( [[.02, 2],[1, 300],[.2,2.5]]),
@@ -55,7 +55,7 @@ print('mainshock ID', i_MS_ID)
 #C# create time vector --> use obspy UTCDateTime or mx.DateTime
 a_t_decYr = np.zeros( m_EvInRmax[0].shape[0])
 a_t_decYr2 = np.zeros( m_EvInRmax[0].shape[0])
-for i in xrange( m_EvInRmax[0].shape[0]):
+for i in range( m_EvInRmax[0].shape[0]):
     a_t_decYr[i] = seis_utils.dateTime2decYr( [m_EvInRmax[0,i], m_EvInRmax[1,i], m_EvInRmax[2,i], m_EvInRmax[3,i], m_EvInRmax[4,i], m_EvInRmax[5,i]])
 
 #==================================3================================================
